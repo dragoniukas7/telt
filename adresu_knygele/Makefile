@@ -1,13 +1,15 @@
 BIN := book
 
-BIN_SRCS := main.c
+
+BIN_SRCS := main.o user_input.o
+CPPFLAGS := -I$(shell pwd)/
 
 .PHONY: clean all
 
 all: $(BIN)
 
 $(BIN): $(BIN_SRCS)
-	$(CC) -o $@ $^ $(LDFLAGS)
+	$(CC) $(CPPFLAGS) -o $@ $^ $(LDFLAGS)
 
 clean:
 	$(RM) $(BIN)

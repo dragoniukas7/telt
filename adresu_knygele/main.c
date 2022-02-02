@@ -1,29 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "user_input.h"
+#include "main.h"
 #define DELIMETER ","
-
-struct Person {
-    char name[30];
-    char surname[30];
-    char number[30];
-    char email[30];
-    struct Person *next;
-};
-
-struct Person* create_node(char *name, char *surname, char *email, char *number);//
-struct Person* create_address_node(char *address_line);
-
-int delete_pos(struct Person *list, int *pos);
-struct Person* find_pos(struct Person *list, int *pos);
-struct Person* find(char *name, char *surname, char *email, char *number);
-void add_to_list(struct Person **list, struct Person *node);
-int add_to_list_at(struct Person **list, struct Person *node, int *pos);
-void actions(char operator, struct Person *list);
-void print_list(struct Person *list);//
-void delete_list(struct Person *list);
-void load_addresses(FILE *file, struct Person **list);
-
 
 int main(void)
 {
@@ -45,103 +25,19 @@ int main(void)
 
     printf("Enter command: ");
         while((operator = getchar()) != '0') {
-            if (operator == 'q')
+            if (operator == 'q'){
                 break;
+                }
             if (operator != '\n') {
-                actions(operator, list);
+                actions(operator, &list);
                 printf("Enter command: ");
             }
 	}
-    //delete_list(list);
-    //fclose(address_file);
+    delete_list(list);
+    fclose(address_file);
     return 0;
 }
 
-void actions(char operator, struct Person *list)
-{
-
-	struct Person *person = NULL;
-	char name[30];
-    	char surname[30];
-    	char number[30];
-    	char email[30];
-    	int pos;
-	
-	switch(operator) {
-			case 'r': //perziureti visa sarasa
-				printf("Adresatų sąrašas:\n");
-				print_list(list);
-				break;
-			case '+': //prideti i gala
-				
-				printf("Įveskite adresato vardą:\n");
-				
-				scanf("%s", name);
-				printf("Įveskite adresato pavardę:\n");
-				
-				scanf("%s", surname);
-				printf("Įveskite adresato el. pašto adresą:\n");
-				
-				scanf("%s", email);
-				printf("Įveskite adresato tel. nr.:\n");
-				
-				scanf("%s", number);
-				
-				person = create_node(name, surname, email, number);
-           			add_to_list(&list, person);
-				
-				break;
-			case 'p': //prideti i pozicija
-
-				printf("Įveskite adresato vardą:\n");
-				
-				scanf("%s", name);
-				printf("Įveskite adresato pavardę:\n");
-				
-				scanf("%s", surname);
-				printf("Įveskite adresato el. pašto adresą:\n");
-				
-				scanf("%s", email);
-				printf("Įveskite adresato tel. nr.:\n");
-				
-				scanf("%s", number);
-				printf("Įveskite poziciją\n");
-				
-				scanf("%d", &pos);
-				
-				person = create_node(name, surname, email, number);
-           			add_to_list_at(&list, person, &pos);
-				
-				break;
-			case '-': //istrinti pagal pozicija
-				printf("Įveskite poziciją\n");
-				
-				scanf("%d", &pos);
-				
-				delete_pos(list, &pos);
-				
-				break;
-			case 'd': //istrinti visa sarasa
-				delete_list(list) ;
-				break;
-			case 's': //rasti pagal vieta
-				printf("Įveskite poziciją\n");
-				
-				scanf("%d", &pos);
-				person = find_pos(list, &pos);
-				if(person){
-				printf("%s %s %s %s", person->name, person->surname, person->number, person->email);
-				}
-				break;
-			case 'f': //rasti pagal kriteriju
-				
-				break;
-			case '\n':
-				break;
-			default:
-				printf("Command not found\n");
-		}
-}
 
 
 void load_addresses(FILE *file, struct Person **list)
@@ -222,6 +118,7 @@ int add_to_list_at(struct Person **list, struct Person *person, int *pos)
     	}
     	temp = temp->next;
     }
+    
     person->next = temp->next;
     temp->next = person;
     return 0;
@@ -247,9 +144,9 @@ void delete_list(struct Person *list)
     }
 }
 
-int delete_pos(struct Person *list, int *pos)
+int delete_pos(struct Person **list, int *pos)
 {
-    struct Person *to_delete = list;
+    struct Person *to_delete = *list;
     /*
     while (list != NULL) {
         list = list->next;
@@ -260,10 +157,10 @@ int delete_pos(struct Person *list, int *pos)
     if(*pos == 1){
     	
 
-        *to_delete = *list;
-        free(to_delete);
-        *list = *list->next;
+        //to_delete = *list;
 
+        *list = (*list)->next;
+        free(to_delete);
     
     	return 0;
     }
@@ -271,17 +168,20 @@ int delete_pos(struct Person *list, int *pos)
     
     for (int i = 1; i < *pos - 1; ++i)
     {
-    	if(list->next == NULL){
+    	if(to_delete->next == NULL){
     	    return 1;
     	}
-    	list = list->next;
+    	to_delete = to_delete->next;
     }
 
     
-    to_delete = list->next;
+    //to_delete = (*list)->next;
     
-    if(list->next != NULL)
-    list->next = to_delete->next;
+    struct Person *tmp = to_delete;
+    to_delete = to_delete->next;
+    
+    if(tmp->next != NULL)
+    tmp->next = to_delete->next;
     free(to_delete);
     
     return 0;
@@ -290,7 +190,6 @@ int delete_pos(struct Person *list, int *pos)
 
 struct Person* find_pos(struct Person *list, int *pos){
 
-    
     struct Person *p = list;
     for (int i = 1; i < *pos ; ++i){
     if(list->next != NULL){
@@ -302,3 +201,8 @@ struct Person* find_pos(struct Person *list, int *pos){
     return p;
 }
 
+struct Person* find(char *name, char *surname, char *email, char *number){
+
+
+
+}
