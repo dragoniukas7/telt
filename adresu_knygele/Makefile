@@ -1,15 +1,13 @@
 BIN := book
-
-
-BIN_SRCS := main.o user_input.o
-CPPFLAGS := -I$(shell pwd)/
+OBJS := main.o linked_list.o usage.o
+CPPFLAGS := -g -I$(shell pwd)/
 
 .PHONY: clean all
 
 all: $(BIN)
 
-$(BIN): $(BIN_SRCS)
+$(BIN): $(OBJS)
 	$(CC) $(CPPFLAGS) -o $@ $^ $(LDFLAGS)
 
 clean:
-	$(RM) $(BIN)
+	$(RM) $(BIN) $(OBJS)
