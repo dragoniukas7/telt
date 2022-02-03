@@ -1,13 +1,14 @@
-CC:=gcc
-CFLAGS:=-Wall
+CFLAGS:=-Wall -fpic -shared
 LIB:=libmath_functions.so
-LIB_SRCS := math_functions.c
+OBJS := math_functions.o
 PREFIX := /usr
+
+.PHONY: clean all install uninstall
 
 all: $(LIB)
 
-$(LIB): $(LIB_SRCS)
-	$(CC) -fpic -shared -o $(LIB) $^
+$(LIB): $(OBJS)
+	$(CC) $(CFLAGS) -o $(LIB) $^
 
 install:
 	install -d $(DESTDIR)/$(PREFIX)/lib $(DESTDIR)/$(PREFIX)/include
@@ -19,4 +20,4 @@ uninstall:
 	$(RM) $(DESTDIR)/$(PREFIX)/include/math_functions.h
 
 clean:
-	rm -f $(LIB)
+	$(RM) $(LIB) $(OBJS)
