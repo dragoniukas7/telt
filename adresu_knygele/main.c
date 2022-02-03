@@ -75,7 +75,7 @@ void actions(char operator, struct Person **list)
 				scanf("%30s", number);
 				
 				person = create_node(name, surname, email, number);
-           		add_to_list(list, person);
+           			add_to_list(list, person);
 				
 				break;
 			case 'p': //prideti i pozicija
@@ -97,9 +97,9 @@ void actions(char operator, struct Person **list)
 				scanf("%d", &pos);
 				
 				person = create_node(name, surname, email, number);
-           		if(add_to_list_at(list, person, &pos) != 0){
-           			printf("Įvesta pozicija neegzistuoja:\n");
-           		}
+           			if(add_to_list_at(list, person, &pos) != 0){
+           				printf("Įvesta pozicija neegzistuoja:\n");
+           			}
 				
 				break;
 			case '-': //istrinti pagal pozicija
